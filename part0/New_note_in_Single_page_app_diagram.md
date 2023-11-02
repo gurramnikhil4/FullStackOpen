@@ -3,27 +3,12 @@ sequenceDiagram
     participant browser
     participant server
 
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    Note right of browser: User submits note
+    Note right of browser: Redraw html after pushing note to note[]
+
+    browser->>server: POST note="hi" to https://studies.cs.helsinki.fi/exampleapp/new_note_spa
     activate server
-    server-->>browser: HTML document
+    Note left of server: server adds "hi" to server's note list
+    server-->>browser: status=201, with message:"note created"
     deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: the css file
-    deactivate server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
-    activate server
-    server-->>browser: the JavaScript file
-    deactivate server
-
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
-
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
-    deactivate server
-
-    Note right of browser: The browser executes the callback function that renders the notes
 ```
