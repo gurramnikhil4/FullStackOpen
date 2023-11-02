@@ -6,7 +6,7 @@ sequenceDiagram
     browser->>server: POST note="hi" to https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
     Note left of server: server adds "hi" to note list
-    server-->>browser: status=302, redirect to ttps://studies.cs.helsinki.fi/exampleapp/notes
+    server-->>browser: status=302, redirect to https://studies.cs.helsinki.fi/exampleapp/notes
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
