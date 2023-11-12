@@ -19,9 +19,8 @@ const App = () => {
 
     <div>
       <Header name={course} />
-      <Content parts={[parts[0].name,parts[1].name,parts[2].name]} exercises={[parts[0].exercises,parts[1].exercises,parts[2].exercises]} />
-      
-      <Total number={[parts[0].exercises,parts[1].exercises,parts[2].exercises]} />
+      <Content parts={parts} />
+      <Total parts={parts} />
     </div>
   )
 }
@@ -32,23 +31,19 @@ return(
 )
 }
 
-const Content=({parts,exercises})=>{
+const Content=({parts})=>{
   return(
     <>
-    <Part part={parts[0]} exercise={exercises[0]}/>
-    <Part part={parts[1]} exercise={exercises[1]}/>
-    <Part part={parts[2]} exercise={exercises[2]}/>
+    <Part part={parts[0].name} exercise={parts[0].exercises}/>
+    <Part part={parts[1].name} exercise={parts[1].exercises}/>
+    <Part part={parts[2].name} exercise={parts[2].exercises}/>
     </>
   )
 }
 
-const Total=({number})=>{
-  let n=0;
-  for(const arg of number){
-    n+=arg;
-  }
+const Total=({parts})=>{
   return(
-    <p>Number of exercises {n}</p>
+    <p>Number of exercises {parts[0].exercises+parts[1].exercises+parts[2].exercises}</p>
   )
 }
 
