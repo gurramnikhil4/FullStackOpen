@@ -7,17 +7,30 @@ const Button = (props) =>{
 }
 
 const Statistics = ({ratings,isGiven}) =>{
+  if(!isGiven) {
+    return (<p>No feedback given</p>)
+  }
   const all=ratings[0]+ratings[1]+ratings[2];
   return(
-    <>
-      <h1>Statistics</h1>
-      <p>good {ratings[0]}</p>
-      <p>neutral {ratings[1]}</p>
-      <p>bad {ratings[2]}</p>
-      <p>all {all}</p>
-      <p>average {all?((ratings[0]-ratings[2])/all):0}</p>
-      <p>positve {all?((ratings[0]*100)/all):0}</p>
-    </>
+    <table>
+      <tbody>
+      <StatisticLine text="good" value ={ratings[0]} />
+      <StatisticLine text="neutral" value ={ratings[1]} />
+      <StatisticLine text="bad" value ={ratings[2]} />
+      <StatisticLine text="all" value ={all} />
+      <StatisticLine text="average" value ={(ratings[0]-ratings[2])/all} />
+      <StatisticLine text="positive" value ={(ratings[0]*100)/all} per={1}/>
+      </tbody>
+    </table>
+  )
+}
+
+const StatisticLine = ({text,value, per})=>{
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value} {(per)?("%"):("")}</td>
+    </tr>
   )
 }
 
@@ -27,15 +40,23 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const [gave, setGiven] = useState(0)
 
+  const onSmash = (setRating) =>{
+    setRating(n=>n+1);
+    setGiven(1);
+  }
+  
   return (
     <div>
       <h1>Give Feedback</h1>
-      <Button handleClick={()=>setGood(n=>n+1)}text="good"/>
-      <Button handleClick={()=>setNeutral(n=>n+1)}text="neutral"/>
-      <Button handleClick={()=>setBad(n=>n+1)}text="bad"/>
+      <Button handleClick={()=>onSmash(setGood)}text="good"/>
+      <Button handleClick={()=>onSmash(setNeutral)}text="neutral"/>
+      <Button handleClick={()=>onSmash(setBad)}text="bad"/>
+      
+      <h1>Statistics</h1>
 
-     <Statistics ratings={[good,neutral,bad]}/>
+      <Statistics ratings={[good,neutral,bad]} isGiven={gave}/>
 
     </div>
   )
