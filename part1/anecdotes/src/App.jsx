@@ -16,18 +16,13 @@ const App = () => {
   const [votes, setVote] = useState(new Array(8).fill(0));
   const [maxV, setMax] = useState(0);
 
-  console.log(selected)
-
-  const copy=[...votes];
-
   const setV = () => {
-    console.log(votes);
+    const copy=[...votes];
     copy[selected]+=1;
     setVote(copy);
     if(votes[maxV]<(votes[selected]+1))setMax(selected);
   }
 
-  
   return (
     <>
     <h1>Anectode of the day</h1>
@@ -41,9 +36,7 @@ const App = () => {
     <div>
       {anecdotes[maxV]} with {votes[maxV]} votes
     </div>
-
     </>
-
   )
 }
 
