@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,7 +13,6 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-
   const [newSearch, setNewSearch] = useState('')
 
 
@@ -40,29 +43,14 @@ const handleSubmit = (event)=>{
   return (
     <div>
       <h2>Phonebook</h2>
-
-      <label htmlFor="search">filter shown with </label>
-      <input value={newSearch} type="text" id="search" name="toSearch" onChange={handleSearch}/>
-
+      <Filter newSearch={newSearch} onChange={handleSearch}/>
 
       <h2>add a new number</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={(event)=>setNewName(event.target.value)}/>
-        </div>
-        <div>
-          number: <input type="number" value={newNumber} onChange={(event)=>setNewNumber(event.target.value)}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <PersonForm handleSubmit={handleSubmit} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
 
-      <ul>
-        {persons.map((person)=><li key={person.name}>{person.name} {person.number}</li>)}
-      </ul>
-      ...
+      <h2>Numbers</h2>
+      <Persons persons={persons}/>
+      
     </div>
   )
 }
