@@ -38,6 +38,15 @@ const handleSubmit = (event)=>{
   setNewNumber('')
 }
 
+const handleDelete = (name,id)=>{
+  if (window.confirm(`Delete ${name}?`)) {
+    contactServices.remove(id).then(()=>{
+      // contactServices.getAll().then(response=>setPersons(response))
+      setPersons(persons.filter(person=>person.id!=id))
+    })
+}
+}
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -47,7 +56,7 @@ const handleSubmit = (event)=>{
       <PersonForm handleSubmit={handleSubmit} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
 
       <h2>Numbers</h2>
-      <Persons persons={persons}/>
+      <Persons persons={persons} handleDelete={handleDelete}/>
       
     </div>
   )
