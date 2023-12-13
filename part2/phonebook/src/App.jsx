@@ -2,7 +2,7 @@ import { useState, useEffect} from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import contactServices from './services/contacts'
 
 const App = () => {
 
@@ -11,14 +11,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
 
-
-  const hook = () =>{
-    let promise = axios.get('http://localhost:3001/persons');
-    promise.then( (response) =>{
-      setPersons(response.data)
-    } )
-  }
-  useEffect(hook,[]);
+  useEffect(()=>{
+    contactServices.getAll().then(response=>setPersons(response))
+  },[]);
   
   const handleSearch = (event) =>{
     setPersons(persons.filter((person)=>{
@@ -37,15 +32,11 @@ const handleSubmit = (event)=>{
     name:newName,
     number:newNumber,
     }
-  
-    axios.post(`http://localhost:3001/persons/`,newNameObject)
-    .then((response)=>console.log(response.data))
-  setPersons(persons.concat(newNameObject))
+    contactServices.create(newNameObject).then((data)=>setPersons(persons.concat(data)))
   }
   setNewName('')
   setNewNumber('')
 }
-
 
   return (
     <div>
