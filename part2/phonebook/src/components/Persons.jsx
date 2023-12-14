@@ -8,7 +8,8 @@ const Persons = ({persons,handleDelete})=>{
 const Person = (props)=>{
   return(
     <li>
-      {props.person.name} {props.person.number} {props.person.id}
+      {/* {console.log(props.person)} */}
+      {props.person.name} {props.person.number}
       <button onClick={()=>props.deleteContact(props.person.name, props.person.id)}>delete</button>
     </li>
   )

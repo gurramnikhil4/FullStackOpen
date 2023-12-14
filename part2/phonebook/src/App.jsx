@@ -7,6 +7,7 @@ import contactServices from './services/contacts'
 const App = () => {
 
   const [persons, setPersons] = useState([])
+  // const [toDisplay, setDisplay]=useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
@@ -24,9 +25,18 @@ const App = () => {
 
 const handleSubmit = (event)=>{
   event.preventDefault();
-  if(persons.some(person=>person.name==newName)){
-    alert(`${newName} is already added to phonebook`)
-  }
+  let toFind=null;
+  if(toFind=persons.find(person=>person.name==newName)){
+    if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      const newObject={...toFind, number:newNumber}
+      contactServices.update(newObject.id,newObject).then(
+       (response)=> {
+        setPersons(persons.map((person)=>{
+          return person.id==response.id?response:person
+        }))
+       })
+      }
+    }
   else{ 
     const newNameObject = {
     name:newName,
