@@ -3,14 +3,18 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import contactServices from './services/contacts'
+import Message from './components/Message'
+import './index.css'
+
+const uptoDate="Phonebook upto date"
 
 const App = () => {
 
   const [persons, setPersons] = useState([])
-  // const [toDisplay, setDisplay]=useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [errorMessage, setErrorMessage]=useState(uptoDate)
 
   useEffect(()=>{
     contactServices.getAll().then(response=>setPersons(response))
@@ -34,6 +38,10 @@ const handleSubmit = (event)=>{
         setPersons(persons.map((person)=>{
           return person.id==response.id?response:person
         }))
+        setErrorMessage(`Updated ${response.name}`)
+        setTimeout(
+          ()=>setErrorMessage(uptoDate)
+          ,2500)
        })
       }
     }
@@ -42,7 +50,13 @@ const handleSubmit = (event)=>{
     name:newName,
     number:newNumber,
     }
-    contactServices.create(newNameObject).then((data)=>setPersons(persons.concat(data)))
+    contactServices.create(newNameObject).then((data)=>{
+      setPersons(persons.concat(data))
+      setErrorMessage(`Created ${data.name}`)
+      setTimeout(
+        ()=>setErrorMessage(uptoDate)
+        ,2500)
+    })
   }
   setNewName('')
   setNewNumber('')
@@ -65,6 +79,7 @@ const handleDelete = (name,id)=>{
       <h2>add a new number</h2>
       <PersonForm handleSubmit={handleSubmit} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
 
+      <Message message={errorMessage}/>
       <h2>Numbers</h2>
       <Persons persons={persons} handleDelete={handleDelete}/>
       
