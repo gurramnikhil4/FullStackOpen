@@ -67,19 +67,27 @@ const handleDelete = (name,id)=>{
     contactServices.remove(id).then(()=>{
       // contactServices.getAll().then(response=>setPersons(response))
       setPersons(persons.filter(person=>person.id!=id))
-    })
+    }).catch(()=>{
+      setPersons(persons.filter(person=>person.id!=id))
+      setErrorMessage(`Information of ${name} has already been deleted from the server`)
+      setTimeout(()=>{
+        setErrorMessage(uptoDate)
+      },2500)
+    }
+    )
 }
 }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message message={errorMessage}/>
+
       <Filter newSearch={newSearch} onChange={handleSearch}/>
 
       <h2>add a new number</h2>
       <PersonForm handleSubmit={handleSubmit} newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber}/>
 
-      <Message message={errorMessage}/>
       <h2>Numbers</h2>
       <Persons persons={persons} handleDelete={handleDelete}/>
       
