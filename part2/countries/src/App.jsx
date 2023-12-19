@@ -11,22 +11,9 @@ const Search=(props)=>{
   )
 }
 
-const Display=({value})=>{
-  if(!value)return(null)
-  else if(typeof value === 'string')return(<div>{value}</div>)
-  else if(value instanceof Array){
-        if(value.length>1)return(
-          <ul>
-            {
-            value.map(name=>{
-              return <li key={name}>{name}</li>
-            })
-            }
-          </ul>
-        )
-          }
-  else return(
-  <>
+const View=({value})=>{
+  return(
+    <>
     <h1>{value.name.common}</h1>
     <div>capital {value.capital}</div>
     <div>area {value.area}</div>
@@ -36,6 +23,56 @@ const Display=({value})=>{
     </ul>
     <img src={`${value.flags.png}`} alt={value.flags.alt} />
   </>
+  )
+}
+
+const ListView=(props)=>{
+  const [showing,setShow]=useState(0)
+  const [details,setDetails]=useState(null)
+  
+  const handleClick=()=>{
+    if(!showing){
+    axios.get(`${baseURL}/${props.value.toLowerCase()}`).then((response)=>{
+      setDetails(response.data)
+      setShow(1)
+    })}
+
+    else setShow(0)
+
+  }
+
+  let count=null;
+  return(<div>
+    <li>
+      <div>
+        {props.value}
+        <button onClick={handleClick}>
+          {showing?"hide":"show"}
+        </button>
+      </div>
+
+      <div>
+          {
+          showing?<View value={details}/>:" "
+          }
+      </div>
+    </li>
+
+    </div>
+  )
+}
+
+const Display=({value})=>{
+  if(!value)return(null)
+  else if(typeof value === 'string')return(<div>{value}</div>)
+  else if(value instanceof Array){
+        if(value.length>1)return(
+          <ul>
+            {value.map(name=><ListView key={name} value={name}/>)}
+          </ul>
+        )}
+  else return(
+  <View value={value}/>
   )
 }
 
@@ -67,8 +104,9 @@ function App() {
     else if(searchResult.length==1){
       axios.get(`${baseURL}/${searchResult[0].toLowerCase()}`).then(
         (response)=>{
-          setDisplay(response.data)
+          setDisplay(response.data) 
     })}
+
     else
     {setDisplay(searchResult)}
 
