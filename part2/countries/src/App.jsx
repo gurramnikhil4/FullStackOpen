@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+const api_key = "27e114a7a67497580f43b7f06e6d43e3"
 
 const baseURL='https://studies.cs.helsinki.fi/restcountries/api/name/'
 const Search=(props)=>{
@@ -12,18 +13,38 @@ const Search=(props)=>{
 }
 
 const View=({value})=>{
+  const [Data,setData]=useState()
+  const [Wheather, setWheather]=useState()
+
+  useEffect(()=>{
+    axios.get(`${baseURL}/${value.toLowerCase()}`).then((response)=>{
+        setData(response.data)
+        return response.data
+        }).then((data)=>{
+            return axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=`+data.capitalInfo.latlng[0]+`&lon=`+data.capitalInfo.latlng[1]+`&appid=`+api_key+`&units=metric`)
+          }).then((wdata)=>{setWheather(wdata.data)}          )
+
+},[])
+
+if(Data&&Wheather){
   return(
     <>
-    <h1>{value.name.common}</h1>
-    <div>capital {value.capital}</div>
-    <div>area {value.area}</div>
+    <h1>{Data.name.common}</h1>
+    <div>capital {Data.capital}</div>
+    <div>area {Data.area}</div>
     <h2>languages</h2>
     <ul>
-      {Object.values(value.languages).map(key=><li key={key}>{key}</li>)}
+      {Object.values(Data.languages).map(lang=><li key={lang}>{lang}</li>)}
     </ul>
-    <img src={`${value.flags.png}`} alt={value.flags.alt} />
+    <img src={`${Data.flags.png}`} alt={Data.flags.alt} />
+    <h2>Wheather in {Data.capital}</h2>
+    <div>temperature {Wheather.main.temp} Celcius</div>
+    <img src={`https://openweathermap.org/img/wn/`+Wheather.weather[0].icon+`@2x.png`} alt={Data.flags.alt} />
+    <div>wind  {Wheather.wind.speed} m/s</div>
+
   </>
   )
+}
 }
 
 const ListView=(props)=>{
@@ -36,9 +57,7 @@ const ListView=(props)=>{
       setDetails(response.data)
       setShow(1)
     })}
-
     else setShow(0)
-
   }
 
   let count=null;
@@ -52,9 +71,7 @@ const ListView=(props)=>{
       </div>
 
       <div>
-          {
-          showing?<View value={details}/>:" "
-          }
+          {showing?<View value={details.name.common}/>:" "}
       </div>
     </li>
 
@@ -64,9 +81,9 @@ const ListView=(props)=>{
 
 const Display=({value})=>{
   if(!value)return(null)
-  else if(typeof value === 'string')return(<div>{value}</div>)
+  else if(value==10)return(<div>Too many matches, specify another filter</div>)
   else if(value instanceof Array){
-        if(value.length>1)return(
+       return(
           <ul>
             {value.map(name=><ListView key={name} value={name}/>)}
           </ul>
@@ -99,16 +116,16 @@ function App() {
     const searchResult=countries.filter(country=>country.toLowerCase().includes(toSearch.toLowerCase()))
 
     if(searchResult.length>10){
-      setDisplay('Too many matches, specify another filter')
+      setDisplay(10)
     }
     else if(searchResult.length==1){
-      axios.get(`${baseURL}/${searchResult[0].toLowerCase()}`).then(
-        (response)=>{
-          setDisplay(response.data) 
-    })}
+      setDisplay(searchResult[0]) 
+    }
 
     else
-    {setDisplay(searchResult)}
+    {
+      setDisplay(searchResult)
+    }
 
   }
 
