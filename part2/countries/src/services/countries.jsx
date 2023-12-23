@@ -1,6 +1,6 @@
 import axios from "axios";
 const baseURL='https://studies.cs.helsinki.fi/restcountries/api/'
-const api_key = "27e114a7a67497580f43b7f06e6d43e3"
+const api_key = import.meta.env.VITE_SOME_KEY
 
 const getAll =()=>{
    return axios.get(baseURL+'all')
