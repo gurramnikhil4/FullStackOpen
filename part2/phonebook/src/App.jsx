@@ -56,6 +56,12 @@ const handleSubmit = (event)=>{
       setTimeout(
         ()=>setErrorMessage(uptoDate)
         ,2500)
+    }).catch((error)=>{
+      // console.log(error)
+      setErrorMessage(error.response.data.error)
+      setTimeout(
+        ()=>setErrorMessage(uptoDate)
+        ,2500)
     })
   }
   setNewName('')
