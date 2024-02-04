@@ -1,0 +1,13 @@
+GET http://localhost:3001/api/blogs/
+
+###
+POST http://localhost:3001/api/blogs/ HTTP/1.1
+content-type: application/json
+
+{
+    "title": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT",
+	"author":"Nikhil",
+	"url":"hacker.com",
+	"likes":"99"
+}
