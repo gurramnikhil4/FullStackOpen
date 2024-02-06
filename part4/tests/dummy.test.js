@@ -103,3 +103,14 @@ describe('total likes', () => {
 		expect(listHelper.mostLikes(listWithManyBlogs)).toEqual(shouldBe)
 	})
   })
+
+  describe('Most blogs by author',()=>{
+	
+	test('in list with mutiple blogs',()=>{
+		const shouldBe = {
+			author: "Robert C. Martin",
+			blogs: 3
+		  }
+		expect(listHelper.mostBlogs(listWithManyBlogs)).toEqual(shouldBe)
+	})
+  })
