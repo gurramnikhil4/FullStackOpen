@@ -49,6 +49,24 @@ test('add a blog', async()=>{
 
 })
 
+test('likes should default to zero', async()=>{
+	const newBlog={
+		title: "abc123123",
+		author: "xyz098098",
+		url: "abcxyz.com"}
+
+	await api
+	.post('/api/blogs')
+	.send(newBlog)
+	.expect(201)
+	.expect('Content-Type', /application\/json/)
+
+	const blogsInDBTest = await helper.blogsInDB()
+	// console.log(blogsInDBTest)
+	expect(blogsInDBTest[helper.initialBlogs.length].likes).toEqual(0)
+
+})
+
 afterAll(async () => {
 	await mongoose.connection.close()
   })
