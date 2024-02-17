@@ -26,6 +26,29 @@ test('blog should have id, not _id', async()=>{
 	// expect(response.body[0]._id).toBeDefined()
 })
 
+test('add a blog', async()=>{
+	const newBlog={
+		title: "abc123123",
+		author: "xyz098098",
+		url: "abcxyz.com",
+		likes: 10,
+	}
+
+	await api
+	.post('/api/blogs')
+	.send(newBlog)
+	.expect(201)
+	.expect('Content-Type', /application\/json/)
+
+	//You are testing the app api, not mongoose api
+	// const newBlogDoc= new Blog(newBlog)
+	// await newBlogDoc.save()
+
+	const blogsInDBTest = await helper.blogsInDB()
+	expect(blogsInDBTest).toHaveLength(helper.initialBlogs.length + 1)
+
+})
+
 afterAll(async () => {
 	await mongoose.connection.close()
   })
