@@ -7,12 +7,12 @@ const Blog = require('../models/blog')
 
 beforeEach( async () => {
 	await Blog.deleteMany({})
-	console.log(helper.initialBlogs)
+	// console.log(helper.initialBlogs)
 	const blogObjects = helper.initialBlogs.map(blog=> new Blog(blog))
 	const promiseArray = blogObjects.map(blog => blog.save())
 	await Promise.all(promiseArray)
 
-},10000)
+},30000)
 
 test('all blogs are returned', async ()=>{
 	const response = await api.get('/api/blogs')
@@ -66,6 +66,22 @@ test('likes should default to zero', async()=>{
 	expect(blogsInDBTest[helper.initialBlogs.length].likes).toEqual(0)
 
 })
+
+test('blogs should have a title and url', async()=>{
+	const newBlog={
+		author: "xyz098098"
+	}
+
+	await api
+	.post('/api/blogs')
+	.send(newBlog)
+	.expect(400)
+
+	// const blogsInDBTest = await helper.blogsInDB()
+	// // console.log(blogsInDBTest)
+	// expect(blogsInDBTest[helper.initialBlogs.length].likes).toEqual(0)
+
+}, 30000)
 
 afterAll(async () => {
 	await mongoose.connection.close()
