@@ -83,6 +83,25 @@ test('blogs should have a title and url', async()=>{
 
 }, 30000)
 
+test('deleting a blog', async()=>{
+	const blogsBeforeDelete = await helper.blogsInDB()
+	const blogToDelete = blogsBeforeDelete[0]
+
+	await api
+	.delete (`/api/blogs/${blogToDelete.id}`)
+	.expect(204)
+
+	const blogsAfterDelete = await helper.blogsInDB()
+
+	expect(blogsAfterDelete).toHaveLength(
+		helper.initialBlogs.length - 1
+	  )
+  
+	const contents = blogsAfterDelete.map(r => r.title)
+  
+	expect(contents).not.toContain(blogToDelete.title)
+})
+
 afterAll(async () => {
 	await mongoose.connection.close()
   })
