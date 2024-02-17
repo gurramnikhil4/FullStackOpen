@@ -102,6 +102,26 @@ test('deleting a blog', async()=>{
 	expect(contents).not.toContain(blogToDelete.title)
 })
 
+
+test('updating a blog', async()=>{
+	const blogsBeforeUpdate = await helper.blogsInDB()
+	const blogToUpdate = blogsBeforeUpdate[0]
+
+	const blogEdit= {...blogToUpdate, likes:5}
+
+	await api
+	.put(`/api/blogs/${blogToUpdate.id}`)
+	.send(blogEdit)
+	.expect(200)
+
+	const blogsAfterUpdate = await helper.blogsInDB()
+	const blogAfterUpdate = blogsAfterUpdate[0]
+
+	expect(blogAfterUpdate.likes).toEqual(5)
+
+},10000)
+
+
 afterAll(async () => {
 	await mongoose.connection.close()
   })
