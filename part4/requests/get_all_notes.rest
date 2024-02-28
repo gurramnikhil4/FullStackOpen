@@ -1,13 +1,30 @@
-GET http://localhost:3001/api/blogs/
+GET http://localhost:3003/api/blogs/
+
 
 ###
-POST http://localhost:3001/api/blogs/ HTTP/1.1
+POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
 
 {
-    "title": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT",
-	"author":"Nikhil",
-	"url":"hacker.com",
-	"likes":"99"
+    "title": "prod",
+	"author":"whiplash",
+	"url":"not my temp.com",
+	"likes":"5"
+}
+
+###
+DELETE http://localhost:3003/api/blogs/65bf70e824b53f9ab544ede2
+
+###
+GET http://localhost:3003/api/users/
+
+
+###
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+    "username": "looking",
+	"name":"likhin",
+	"password":"qwerty"
 }
