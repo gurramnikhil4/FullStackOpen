@@ -4,15 +4,18 @@ const supertest = require('supertest')
 const api= supertest(app)
 const helper = require('./test_helper.js')
 const Blog = require('../models/blog')
+const User=require('../models/user.js')
 
-beforeEach( async () => {
-	await Blog.deleteMany({})
-	// console.log(helper.initialBlogs)
-	const blogObjects = helper.initialBlogs.map(blog=> new Blog(blog))
-	const promiseArray = blogObjects.map(blog => blog.save())
-	await Promise.all(promiseArray)
+// beforeEach( async () => {
+// 	await Blog.deleteMany({})
+// 	// console.log(helper.initialBlogs)
+// 	const blogObjects = helper.initialBlogs.map(blog=> new Blog(blog))
+// 	const promiseArray = blogObjects.map(blog => blog.save())
+// 	await Promise.all(promiseArray)
 
-},30000)
+// },30000)
+
+
 
 test('all blogs are returned', async ()=>{
 	const response = await api.get('/api/blogs')
@@ -120,6 +123,73 @@ test('updating a blog', async()=>{
 	expect(blogAfterUpdate.likes).toEqual(5)
 
 },10000)
+
+describe('adding users', () => {
+	beforeEach(async () => {
+		await User.deleteMany({})
+		const userObjects = helper.initialUsers.map(user=> new User(user))
+		const promiseArrayUser = userObjects.map(user => user.save())
+		await Promise.all(promiseArrayUser)	
+	},10000)
+
+	test('with unique and valid username and valid password passes', async () => {
+		const newUser={
+			name:"john",
+			username:"johnny",
+			password:"qwerty"
+		}
+	
+		await api
+		.post('/api/users')
+		.send(newUser)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+
+		const usersInDBTest = await helper.usersInDB()
+		expect(usersInDBTest.length).toEqual(helper.initialUsers.length+1)
+	},10000)
+
+	test('with invalid password fails', async () => {
+		const newUser={
+			name:"john",
+			username:"johnny",
+			password:"qw"
+		}
+	
+		await api
+		.post('/api/users')
+		.send(newUser)
+		.expect(400)
+
+	},10000)
+
+	test('with invalid username fails', async () => {
+		const newUser={
+			name:"john",
+			username:"jo",
+			password:"qwerty"
+		}
+	
+		await api
+		.post('/api/users')
+		.send(newUser)
+		.expect(400)
+	},20000)
+
+	test('with duplicate username fails', async () => {
+		const newUser={
+			name:"jo",
+			username:"lookin",
+			password:"qwerty"
+		}
+	
+		await api
+		.post('/api/users')
+		.send(newUser)
+		.expect(400)
+	},20000)
+  })
+
 
 
 afterAll(async () => {
