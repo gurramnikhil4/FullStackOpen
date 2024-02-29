@@ -18,32 +18,25 @@ blogsRouter.get('/blogs', async (request, response) => {
   })
 
 
-const getTokenFrom = request => {
-	const authorization = request.get('authorization')  	// console.log(request['headers']) => to access all header [native]
-	// console.log(authorization)
-	if (authorization && authorization.startsWith('Bearer ')) {
-		return authorization.replace('Bearer ', '')
-		}  
-	return null
-}
+// const getTokenFrom = request => {
+// 	const authorization = request.get('authorization')  	// console.log(request['headers']) => to access all header [native]
+// 	// console.log(authorization)
+// 	if (authorization && authorization.startsWith('Bearer ')) {
+// 		return authorization.replace('Bearer ', '')
+// 		}  
+// 	return null
+// }
 
 
 blogsRouter.post('/blogs', async (request, response,next) => {
   const blog = new Blog(request.body)
-//   blog
-//     .save()
-//     .then(result => {
-//       response.status(201).json(result)
-//     })
 
-	// console.log(getTokenFrom(request))
-
-	const decodedToken =  jwt.verify(getTokenFrom(request), process.env.SECRET)
+	const decodedToken =  jwt.verify(request.token, process.env.SECRET)
 	if (!decodedToken.id) {
 		    return response.status(401).json({
 				 error: 'token invalid' })
 				  }
-				  
+
 	const blog_user = await User.findById(decodedToken.id)
 	blog.user=blog_user.id
 
