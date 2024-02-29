@@ -10,16 +10,16 @@ usersRouter.post('/users', async(req,res)=>{
 		return res.status(400).json({ error: 'invalid password' })
 	}
 	const saltRounds = 10
-	const hashedPassword = await bcrypt.hash(password, saltRounds)
+	const passwordHash = await bcrypt.hash(password, saltRounds)
+	// console.log(passwordHash)
 
 	const user = new User(
 		{
 			username,
-			hashedPassword,
-			name			
-		}
+			name,
+			passwordHash		}
 	)
-
+		// console.log(user)
 	const savedUser= await user.save()
 
 	res.status(201).json(savedUser)

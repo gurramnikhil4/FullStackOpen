@@ -4,6 +4,7 @@ GET http://localhost:3003/api/blogs/
 ###
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOCIsImlkIjoiNjVlMGI0ZDFmZDViOGIxMmYxZGU1ODg2IiwiaWF0IjoxNzA5MjI1MjAwfQ.dQxUyGQaSuRruKaxOvEioQgFi7Wwo-GsKUY6JB3ks1I
 
 {
     "title": "testing_populate",
@@ -15,6 +16,10 @@ content-type: application/json
 ###
 DELETE http://localhost:3003/api/blogs/65bf70e824b53f9ab544ede2
 
+
+###
+DELETE http://localhost:3003/api/blogs/all
+
 ###
 GET http://localhost:3003/api/users/
 
@@ -24,7 +29,17 @@ POST http://localhost:3003/api/users
 content-type: application/json
 
 {
-    "username": "looking",
-	"name":"likhin",
-	"password":"qwerty"
+    "username": "testing_auth_08",
+	"name":"nikhil",
+	"password":"qwert"
+}
+
+
+###
+POST http://localhost:3003/api/login
+content-type: application/json
+
+{
+    "username": "testing_auth_08",
+	"password":"qwert"
 }
