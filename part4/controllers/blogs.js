@@ -18,16 +18,6 @@ blogsRouter.get('/blogs', async (request, response) => {
   })
 
 
-// const getTokenFrom = request => {
-// 	const authorization = request.get('authorization')  	// console.log(request['headers']) => to access all header [native]
-// 	// console.log(authorization)
-// 	if (authorization && authorization.startsWith('Bearer ')) {
-// 		return authorization.replace('Bearer ', '')
-// 		}  
-// 	return null
-// }
-
-
 blogsRouter.post('/blogs', async (request, response,next) => {
   const blog = new Blog(request.body)
 
@@ -56,15 +46,29 @@ blogsRouter.delete('/blogs/all', async (request, response,next) => {
 		}
 })
 
-blogsRouter.delete('/blogs/:id', async (request, response,next) => {
-	try{
-		await Blog.findByIdAndDelete(request.params.id)
-		response.status(204).end()
-	}catch(exception) {
-		next(exception)
-		}
-  })
 
+blogsRouter.delete('/blogs/:id', async (request, response,next) => {
+
+	const decodedToken= jwt.verify(request.token, process.env.SECRET)
+	if (!decodedToken.id) {
+		return response.status(401).json({
+			 error: 'token invalid' })
+			  }
+
+	const blogToDelete = await Blog.findById(request.params.id)
+	const blogUser=blogToDelete.user
+
+	// console.log(blogUser.toString())
+	// console.log(decodedToken.id)
+
+	if(blogUser.toString()!=decodedToken.id){
+		return response.status(403).json({
+				 error: 'user not authorized' })
+	}
+	
+	await Blog.findByIdAndDelete(request.params.id)
+	response.status(204).end()
+  })
 
 
 blogsRouter.put('/blogs/:id', async (request, response,next) => {

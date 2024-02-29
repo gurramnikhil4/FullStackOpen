@@ -4,10 +4,10 @@ GET http://localhost:3003/api/blogs/
 ###
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOCIsImlkIjoiNjVlMGI0ZDFmZDViOGIxMmYxZGU1ODg2IiwiaWF0IjoxNzA5MjI1MjAwfQ.dQxUyGQaSuRruKaxOvEioQgFi7Wwo-GsKUY6JB3ks1I
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOSIsImlkIjoiNjVlMGI3ODllYzBmMmEyZThjNjYyZWU1IiwiaWF0IjoxNzA5MjI1ODY4fQ.qYcohyoPF470AbEPhymzod_NBLUtWClOXZa_1sqCEMY
 
 {
-    "title": "testing_populate",
+    "title": "testing_populate_02",
 	"author":"nikhil",
 	"url":"fso.com",
 	"likes":"5"
@@ -29,7 +29,7 @@ POST http://localhost:3003/api/users
 content-type: application/json
 
 {
-    "username": "testing_auth_08",
+    "username": "testing_auth_09",
 	"name":"nikhil",
 	"password":"qwert"
 }
@@ -40,6 +40,21 @@ POST http://localhost:3003/api/login
 content-type: application/json
 
 {
+    "username": "testing_auth_09",
+	"password":"qwert"
+}
+
+###
+POST http://localhost:3003/api/login
+content-type: application/json
+
+{
     "username": "testing_auth_08",
 	"password":"qwert"
 }
+
+
+
+###
+DELETE http://localhost:3003/api/blogs/65e0b514fd5b8b12f1de588a
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOCIsImlkIjoiNjVlMGI0ZDFmZDViOGIxMmYxZGU1ODg2IiwiaWF0IjoxNzA5MjI4NTMzfQ.9qzqeYoUGie-6i17EVglfkJSIXRlIU8tKaP9rmsOUWM
