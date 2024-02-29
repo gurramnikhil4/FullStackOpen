@@ -5,7 +5,7 @@ const User=require('../models/user')
 const jwt = require('jsonwebtoken')
 
 
-blogsRouter.get('/blogs', async (request, response) => {
+blogsRouter.get('/', async (request, response) => {
 	// Blog
 	//   .find({})
 	//   .then(blogs => {
@@ -18,16 +18,17 @@ blogsRouter.get('/blogs', async (request, response) => {
   })
 
 
-blogsRouter.post('/blogs', async (request, response,next) => {
+blogsRouter.post('/', async (request, response,next) => {
   const blog = new Blog(request.body)
 
-	const decodedToken =  jwt.verify(request.token, process.env.SECRET)
-	if (!decodedToken.id) {
-		    return response.status(401).json({
-				 error: 'token invalid' })
-				  }
+	// const decodedToken =  jwt.verify(request.token, process.env.SECRET)
+	// console.log(decodedToken)
+	// if (!decodedToken.id) {
+	// 	    return response.status(401).json({
+	// 			 error: 'token invalid' })
+	// 			  }
 
-	const blog_user = await User.findById(decodedToken.id)
+	const blog_user = await User.findById(request.user.id)
 	blog.user=blog_user.id
 
 	const result = await blog.save()
@@ -37,7 +38,7 @@ blogsRouter.post('/blogs', async (request, response,next) => {
 	blog_user.save()
 })
 
-blogsRouter.delete('/blogs/all', async (request, response,next) => {
+blogsRouter.delete('/all', async (request, response,next) => {
 	try{
 		await Blog.deleteMany({})
 		response.status(204).end()
@@ -47,13 +48,13 @@ blogsRouter.delete('/blogs/all', async (request, response,next) => {
 })
 
 
-blogsRouter.delete('/blogs/:id', async (request, response,next) => {
+blogsRouter.delete('/:id', async (request, response,next) => {
 
-	const decodedToken= jwt.verify(request.token, process.env.SECRET)
-	if (!decodedToken.id) {
-		return response.status(401).json({
-			 error: 'token invalid' })
-			  }
+	// const decodedToken= jwt.verify(request.token, process.env.SECRET)
+	// if (!decodedToken.id) {
+	// 	return response.status(401).json({
+	// 		 error: 'token invalid' })
+	// 		  }
 
 	const blogToDelete = await Blog.findById(request.params.id)
 	const blogUser=blogToDelete.user
@@ -61,7 +62,7 @@ blogsRouter.delete('/blogs/:id', async (request, response,next) => {
 	// console.log(blogUser.toString())
 	// console.log(decodedToken.id)
 
-	if(blogUser.toString()!=decodedToken.id){
+	if(blogUser.toString()!=request.user.id){
 		return response.status(403).json({
 				 error: 'user not authorized' })
 	}
@@ -71,7 +72,7 @@ blogsRouter.delete('/blogs/:id', async (request, response,next) => {
   })
 
 
-blogsRouter.put('/blogs/:id', async (request, response,next) => {
+blogsRouter.put('/:id', async (request, response,next) => {
 
 	try{
 		const updatedBlog=await Blog.findByIdAndUpdate(request.params.id, request.body, {new:true})

@@ -4,7 +4,7 @@ GET http://localhost:3003/api/blogs/
 ###
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOSIsImlkIjoiNjVlMGI3ODllYzBmMmEyZThjNjYyZWU1IiwiaWF0IjoxNzA5MjI1ODY4fQ.qYcohyoPF470AbEPhymzod_NBLUtWClOXZa_1sqCEMY
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsIfdsnR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RpbmdfYXV0aF8wOSIsImlkIjoiNjVlMGI3ODllYzBmMmEyZThjNjYyZWU1IiwiaWF0IjoxNzA5MjI1ODY4fQ.qYcohyoPF470AbEPhymzod_NBLUtWClOXZa_1sqCEMY
 
 {
     "title": "testing_populate_02",

@@ -20,7 +20,7 @@ app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
 app.use('/api/login', loginRouter)
-app.use('/api',blogsRouter)
+app.use('/api/blogs', middleware.userExtractor, blogsRouter)
 app.use('/api',usersRouter)
 
 app.use(middleware.unknownEndpoint)
