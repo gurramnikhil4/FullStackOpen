@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User=require('../models/user')
 
 blogsRouter.get('/blogs', async (request, response) => {
 	// Blog
@@ -8,7 +9,7 @@ blogsRouter.get('/blogs', async (request, response) => {
 	// 	response.json(blogs)
 	//   })
 
-	const resp = await Blog.find({})
+	const resp = await Blog.find({}).populate('user')
 	response.json(resp)
 
   })
@@ -22,14 +23,24 @@ blogsRouter.post('/blogs', async (request, response,next) => {
 //     .then(result => {
 //       response.status(201).json(result)
 //     })
-	try{
-		const result = await blog.save()
-		response.status(201).json(result)
-	}catch(exception) {
-		next(exception)
-	  }
+	const blog_user = await User.findOne()
+	blog.user=blog_user.id
+
+	const result = await blog.save()
+	response.status(201).json(result)
+
+	blog_user.blogs=blog_user.blogs.concat(result.id)
+	blog_user.save()
 })
 
+blogsRouter.delete('/blogs/all', async (request, response,next) => {
+	try{
+		await Blog.deleteMany({})
+		response.status(204).end()
+	}catch(exception) {
+		next(exception)
+		}
+})
 
 blogsRouter.delete('/blogs/:id', async (request, response,next) => {
 	try{
@@ -39,6 +50,8 @@ blogsRouter.delete('/blogs/:id', async (request, response,next) => {
 		next(exception)
 		}
   })
+
+
 
 blogsRouter.put('/blogs/:id', async (request, response,next) => {
 

@@ -6,9 +6,9 @@ POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
 
 {
-    "title": "prod",
-	"author":"whiplash",
-	"url":"not my temp.com",
+    "title": "testing_populate",
+	"author":"nikhil",
+	"url":"fso.com",
 	"likes":"5"
 }
 
