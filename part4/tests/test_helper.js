@@ -1,6 +1,7 @@
 const Blog= require('../models/blog.js')
 const User=require('../models/user.js')
 
+
 const initialBlogs=[
 		{
 			title: "React patterns",
@@ -40,13 +41,14 @@ const initialBlogs=[
 		  }  
 		]
 
-const initialUsers=[
-	{
-		username:"lookin",
-		name:"nikhil",
-		password:"qwerty"
-	}
-]
+// // const passwordHash = await bcrypt.hash("qwerty", 10)
+// const initialUsers=[
+// 	{
+// 		username:"lookin",
+// 		name:"nikhil",
+// 		password:passwordHash
+// 	}
+// ]
 
 
 const blogsInDB = async ()=>{
@@ -63,7 +65,7 @@ const usersInDB = async ()=>{
 module.exports={
 	initialBlogs,
 	blogsInDB,
-	initialUsers,
+	// initialUsers,
 	usersInDB
 }
 

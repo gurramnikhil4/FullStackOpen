@@ -5,15 +5,30 @@ const api= supertest(app)
 const helper = require('./test_helper.js')
 const Blog = require('../models/blog')
 const User=require('../models/user.js')
+const bcrypt = require('bcrypt')
 
-// beforeEach( async () => {
-// 	await Blog.deleteMany({})
-// 	// console.log(helper.initialBlogs)
-// 	const blogObjects = helper.initialBlogs.map(blog=> new Blog(blog))
-// 	const promiseArray = blogObjects.map(blog => blog.save())
-// 	await Promise.all(promiseArray)
 
-// },30000)
+beforeEach( async () => {
+	await Blog.deleteMany({})
+	await User.deleteMany({})
+
+	const passwordHash = await bcrypt.hash("qwerty", 10)
+
+	const initialUser=
+		{
+			username:"lookin",
+			name:"nikhil",
+			passwordHash:passwordHash
+		}
+	
+	const user= new User(initialUser)
+	await user.save()
+
+	const blogObjects = helper.initialBlogs.map(note => new Blog(note))
+	const promiseArray = blogObjects.map(blog => blog.save())
+	await Promise.all(promiseArray)
+
+},30000)
 
 
 
@@ -26,7 +41,6 @@ test('blog should have id, not _id', async()=>{
 	const response = await api.get('/api/blogs')
 	console.log(response.body[0])
 	expect(response.body[0].id).toBeDefined()
-	// expect(response.body[0]._id).toBeDefined()
 })
 
 test('add a blog', async()=>{
@@ -37,15 +51,26 @@ test('add a blog', async()=>{
 		likes: 10,
 	}
 
+	const userInfo={
+		username:"lookin",
+		password:"qwerty"
+	}
+
+	const token = await api
+	.post('/api/login')
+	.send(userInfo)
+	.then(resp=>{
+		return resp.body.token
+	})
+
+	const tokenInHeader='Bearer'+' '+token
+
 	await api
 	.post('/api/blogs')
 	.send(newBlog)
+	.set('Authorization', tokenInHeader)
 	.expect(201)
 	.expect('Content-Type', /application\/json/)
-
-	//You are testing the app api, not mongoose api
-	// const newBlogDoc= new Blog(newBlog)
-	// await newBlogDoc.save()
 
 	const blogsInDBTest = await helper.blogsInDB()
 	expect(blogsInDBTest).toHaveLength(helper.initialBlogs.length + 1)

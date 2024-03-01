@@ -63,7 +63,7 @@ blogsRouter.delete('/:id', async (request, response,next) => {
 	// console.log(decodedToken.id)
 
 	if(blogUser.toString()!=request.user.id){
-		return response.status(403).json({
+		return response.status(401).json({
 				 error: 'user not authorized' })
 	}
 	
